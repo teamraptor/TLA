@@ -1,0 +1,4 @@
+BEGIN
+    const tomi << "tomi"
+    out("Hello World!\n")
+FINISH
