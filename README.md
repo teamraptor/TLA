@@ -5,8 +5,7 @@ TPE de Automatas, Teoria de Lenguajes y Compiladores @ ITBA
 Para compilar el compilador:
 
 ```
-ant clean
-ant
+ant clean jar
 ```
 
 Para compilar un archivo `ejemplo.rawr`:
