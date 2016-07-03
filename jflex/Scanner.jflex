@@ -1,4 +1,4 @@
-package Example;
+package Raptor;
 
 import java_cup.runtime.SymbolFactory;
 %%

@@ -62,15 +62,8 @@
   <target name="jflex" depends="init">
     <jflex file="${jflex}/Scanner.jflex" destdir="${java}" />
   </target>
-  
-  <!-- copy manual edited sources to automatically generated ones -->
-  <target name="copy_src" depends="jflex,cup">
-   <copy todir="${java}">
-     <fileset dir="${src}" includes="**/**.java" />
-   </copy>
-  </target>
 
-  <target name="compile" depends="copy_src">
+  <target name="compile" depends="jflex,cup">
     <javac srcdir="${java}" destdir="${classes}">
       <classpath refid="libraries" />
     </javac>
@@ -79,7 +72,7 @@
   <target name="jar" depends="compile">
     <jar jarfile="${dist}/Compiler.jar" basedir="${classes}">
      <manifest>
-       <attribute name="Main-Class" value="Example.Parser" />
+       <attribute name="Main-Class" value="Raptor.Parser" />
        <!-- CUP runtime is needed for parsing! -->
        <attribute name="Class-Path" value="java-cup-11a-runtime.jar" />
      </manifest>
@@ -89,30 +82,6 @@
 	<fileset dir="${lib}" includes="**/**.jar"/>
     </copy>
   </target>
-
-  <!-- Test the parser in a single run -->
-  <target name="run" depends="jar">
-    <java jar="${dist}/Compiler.jar" fork="true">
-      <arg value="input.test" />
-    </java>
-  </target>
-
-  <!--  unittests for our project -->
-  <!--  <target name="unittest" depends="compile">
-	  <junit printsummary="yes" haltonfailure="yes" fork="yes">
-		  <classpath>
-			  <pathelement location="${classes}" />
-			  <pathelement path="${java.class.path}" />
-			  <fileset dir="${lib}">
-				  <include name="**/*.jar" />
-				  <include name="**/*.zip" />
-			  </fileset>
-		  </classpath>
-		  <formatter type="plain" />
-		  <test name="my.package.my.TestCases" />
-	  </junit>
-  </target>
-  -->
   
   <target name="clean">
     <delete dir="${java}" />
