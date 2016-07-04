@@ -1,0 +1,21 @@
+BEGIN
+  #milis << 0
+  $draw << " "
+  #limit << 0
+  #t
+  out("Cada cuantos milisegundos quieres que dibuje?: \n")
+  in(milis)
+  out("Que quieres que dibuje?: \n")
+  in(draw)
+  out("Cuantos milisegundos quieres que este dibujando?: \n")
+  in(limit)
+  #i <<0
+  loop (i<limit)
+    t << i%milis
+    if (t = 0)
+      out(draw)
+      out("\n")
+    end
+    i<+1
+  end
+FINISH

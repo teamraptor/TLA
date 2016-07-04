@@ -1,0 +1,28 @@
+BEGIN
+  #base << 0
+  #power << 0
+  out("Ingrese la base: \n")
+  in(base)
+  out("Ingrese la potencia: \n")
+  in(power)
+  if (base = 0) and (power = 0)
+    out("oops!")
+  else 
+    if (base = 0)
+      out(base)
+    else 
+      if (power = 0)
+        out(1)
+      else
+        #result << base
+        power <- 1
+        loop (power>0)
+          result<*base
+          power<-1
+        end
+        out(result)
+      end
+    end
+  end
+  out("\n")
+FINISH  

@@ -1,0 +1,23 @@
+BEGIN
+  #flag << 1 
+  loop (flag = 1)
+    #p1 << 0  
+    #p2 << 0
+    out("Player 1:\n")
+    out("Elija: 1 (rock) 2 (paper) 3 (scissors)\n")
+    in(p1)  
+    out("Player 2:\n")  
+    in(p2)
+    if (p1 = p2-1) or (p1=3) and (p2=1)
+      out("Player 2 wins\n")
+    else
+    if (p2 = p1-1) or ((p2=3) and (p1=1))
+      out("Player 1 wins\n")
+    else
+    out("Empate!")
+    end
+    end
+    out("Desean jugar de nuevo? 1 (yes) 0 (no)\n")
+    in(flag)
+  end
+FINISH 

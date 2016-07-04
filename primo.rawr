@@ -1,0 +1,22 @@
+BEGIN
+  out("Ingrese un numero entero positivo:\n")
+  #input << 0
+  in(input)
+  #limit << input/2
+  #i << 2
+  #flag << 1
+  #t
+  loop  (i < limit + 1) and (flag = 1)
+      t << input%i
+      if ( t = 0 )
+        flag << 0
+      end 
+      i<+1
+  end
+  if (flag = 1)
+    out("true")
+  else
+    out("false")
+  end
+  out("\n")
+FINISH

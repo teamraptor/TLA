@@ -1,6 +1,0 @@
-BEGIN
-    $nombre
-    out("Decime tu nombre: \n")
-    in(nombre)
-    out("Hola, " + nombre + "\n")
-FINISH
