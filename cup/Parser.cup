@@ -2,15 +2,10 @@ package Raptor;
 
 import java_cup.runtime.*;
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
 
 parser code {:
 
-    public enum VariableType { INTEGER, STRING;}
-
     private static PrintWriter writer = null;
-    private static Map<String, VariableType> variables;
 
 	public static void main(String args[]) throws Exception {
 		SymbolFactory sf = new DefaultSymbolFactory();
@@ -18,7 +13,9 @@ parser code {:
 		else {
 		    String fileName = args[0].split("\\.")[0];
 		    writer = new PrintWriter(fileName + ".java", "UTF-8");
+		    writeToFile("import java.util.Scanner;");
 		    writeToFile("public class " + fileName +" {\n");
+		    writeToFile("private static Scanner scanner = new Scanner(System.in);");
 		    new Parser(new Scanner(new java.io.FileInputStream(args[0]),sf),sf).parse();
 		}
 	}
@@ -32,27 +29,15 @@ parser code {:
 	    writer.close();
 	}
 	
-	public static void registerVariable(String name, VariableType type) {
-	    variables.put(name, type);
-	}
-	
-	public static boolean variableExists(String name) {
-	    return variables.containsKey(name);
-	}
-	
-	public static VariableType getType(String name) {
-	    return variables.get(name);
-	}
-	
 :}
 
 terminal PLUS, TIMES, MINUS, DIVIDE, ASSIGN, MOD, LPAREN, RPAREN, JUMP, BEGIN, FINISH, AS_PLUS, AS_MINUS, AS_TIMES, AS_DIV, IO_OUT, IO_IN, IF, ELSE, LOOP, END, CMP_LT, CMP_GT, CMP_EQ, CMP_NE, BOOL_OR, BOOL_AND, BOOL_NOT, TRUE, FALSE;
-terminal String  NUM_DEF, TEXT, VAR_NAME, TEXT_DEF, CONST_DEF;
+terminal String  NUM_DEF, TEXT, NUM_VAR, TEXT_VAR, TEXT_DEF, NUM_CONST_DEF, TEXT_CONST_DEF, NUM_CONST, TEXT_CONST;
 terminal Integer NUMBER;
 
 non terminal s;
 non terminal String codee, code_line, var, text_expr, if_block, boolean_exp, boolean_term;
-non terminal Integer num_expr;
+non terminal Object num_expr;
 
 precedence left PLUS;
 precedence left MINUS;
@@ -83,10 +68,15 @@ code_line       ::= num_expr:e
                     {: RESULT= "System.out.print(" + e + ")"; :}
                 |   IO_OUT LPAREN num_expr:e RPAREN
                     {: RESULT= "System.out.print(" + e + ")"; :}
+                |   IO_IN LPAREN NUM_VAR:e RPAREN
+                    {: RESULT= e + " = Integer.valueOf(scanner.nextLine())"; :}
+                |   IO_IN LPAREN TEXT_VAR:e RPAREN
+                    {: RESULT= e + " = scanner.nextLine()"; :}
                 |   if_block:e
                     {: RESULT=e ;:}
                 |   LOOP boolean_exp:d JUMP codee:e END
                     {: RESULT="while(" + d + "){\n" + e + "}"; :}
+                |
                 ;
                 
 if_block        ::= IF boolean_exp:b JUMP codee:e ELSE JUMP codee:j END
@@ -98,9 +88,9 @@ if_block        ::= IF boolean_exp:b JUMP codee:e ELSE JUMP codee:j END
 boolean_exp     ::= LPAREN boolean_exp:a RPAREN
                     {: RESULT= "(" + a + ")";:}
                 |   boolean_term:s BOOL_OR boolean_exp:q
-                    {: RESULT= s + " || " + q ;:}
+                    {: RESULT= "(" + s + " || " + q + ")" ;:}
                 |   boolean_term:s BOOL_AND boolean_exp:t
-                    {: RESULT= s + " && " + t ;:}
+                    {: RESULT= "(" + s + " && " + t + ")" ;:}
                 |   boolean_term:h
                     {: RESULT= h ; :}
                 |   BOOL_NOT boolean_exp:g
@@ -122,47 +112,59 @@ boolean_term    ::= TRUE
                 ;
                  
 var             ::= NUM_DEF:e
-                    {: RESULT="Integer " + e ; :}
+                    {: RESULT="Integer " + e + " = 0"; :}
                 |   NUM_DEF:e ASSIGN num_expr:a
                     {: RESULT="Integer " + e + " = " + a ; :}
                 |   TEXT_DEF:e
-                    {: RESULT="String " + e ; :}
+                    {: RESULT="String " + e + " = \"\""; :}
                 |   TEXT_DEF:e ASSIGN text_expr:a
                     {: RESULT="String " + e + " = " + a ; :}
-                |   VAR_NAME:a AS_PLUS text_expr:e
+                |   TEXT_VAR:a AS_PLUS text_expr:e
                     {: RESULT= a + " = " + a + ".concat(" + e + ")"; :}
-                |   VAR_NAME:a AS_PLUS num_expr:e
+                |   NUM_VAR:a AS_PLUS num_expr:e
                     {: RESULT= a + " = " + a + " + " + e; :}
-                |   VAR_NAME:a AS_MINUS num_expr:e
+                |   NUM_VAR:a AS_MINUS num_expr:e
                     {: RESULT= a + " = " + a + " - " + e; :}
-                |   VAR_NAME:a AS_TIMES num_expr:e
+                |   NUM_VAR:a AS_TIMES num_expr:e
                     {: RESULT= a + " = " + a + " * " + e; :}
-                |   VAR_NAME:a AS_DIV num_expr:e
+                |   NUM_VAR:a AS_DIV num_expr:e
                     {: RESULT= a + " = " + a + " / " + e; :}
-                |   CONST_DEF:a ASSIGN num_expr:e
+                |   NUM_CONST_DEF:a ASSIGN num_expr:e
                     {: RESULT= "final Integer " + a + " = " + e ;:}
-                |   CONST_DEF:a ASSIGN text_expr:e
+                |   TEXT_CONST_DEF:a ASSIGN text_expr:e
                     {: RESULT= "final String " + a + " = " + e ;:}
+                |   TEXT_VAR:v ASSIGN text_expr:j
+                    {: RESULT= v + " = " + j ; :}
+                |   NUM_VAR:v ASSIGN num_expr:j
+                    {: RESULT= v + " = " + j ; :}
                 ;
                 
 text_expr       ::= TEXT:e
                     {: RESULT=e; :}
                 |   text_expr:a PLUS text_expr:r
-                    {: RESULT= a + r ; :}
+                    {: RESULT= a + " + " + r ; :}
+                |   TEXT_VAR:g
+                    {: RESULT=g; :}
+                |   TEXT_CONST:g
+                    {: RESULT=g; :}
                 ;
                 
 num_expr        ::= NUMBER:n  
                     {: RESULT=n; :}
                 | num_expr:l PLUS num_expr:r
-	                {: RESULT=new Integer(l.intValue() + r.intValue()); :}
+                    {: RESULT = (l instanceof String || r instanceof String) ? (l + " + " + r) : new Integer(((Integer)l).intValue() + ((Integer)r).intValue()); :}
                 | num_expr:l MINUS num_expr:r
-	                {: RESULT=new Integer(l.intValue() - r.intValue()); :}
-	            | num_expr:l TIMES num_expr:r
-	                {: RESULT=new Integer(l.intValue() * r.intValue()); :}
-	            | num_expr:l DIVIDE num_expr:r
-	                {: RESULT=new Integer(l.intValue() / r.intValue()); :}
-	            | num_expr:l MOD num_expr:r
-	                {: RESULT=new Integer(l.intValue() % r.intValue()); :}
-	            | LPAREN num_expr:e RPAREN
-	                {: RESULT=e; :}
-	            ;
+                    {: RESULT = (l instanceof String || r instanceof String) ? (l + " - " + r) : new Integer(((Integer)l).intValue() - ((Integer)r).intValue()); :}
+                | num_expr:l TIMES num_expr:r
+                    {: RESULT = (l instanceof String || r instanceof String) ? (l + " * " + r) : new Integer(((Integer)l).intValue() * ((Integer)r).intValue()); :}
+                | num_expr:l DIVIDE num_expr:r
+                    {: RESULT = (l instanceof String || r instanceof String) ? (l + " / " + r) : new Integer(((Integer)l).intValue() / ((Integer)r).intValue()); :}
+                | num_expr:l MOD num_expr:r
+                    {: RESULT = (l instanceof String || r instanceof String) ? (l + " % " + r) : new Integer(((Integer)l).intValue() % ((Integer)r).intValue()); :}
+                | LPAREN num_expr:e RPAREN
+                    {: RESULT=(e instanceof String) ? ("(" + e + ")") : e; :}
+                | NUM_VAR:g
+                    {: RESULT=g; :}
+                | NUM_CONST:g
+                    {: RESULT=g; :}
+                ;

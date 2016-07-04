@@ -1,0 +1,18 @@
+BEGIN
+    #input << 10
+    
+    #i << input
+    
+    i <- 1
+    
+    if (i=0)
+      out(1)
+    else
+      loop (i>0)
+          input <* i
+          i <- 1
+      end
+      out(input)
+      out("\n")
+    end
+FINISH

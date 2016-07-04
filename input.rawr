@@ -1,4 +1,5 @@
 BEGIN
-    const tomi << "tomi"
-    out("Hello World!\n")
+    $input
+    in(input)
+    out(input)
 FINISH
