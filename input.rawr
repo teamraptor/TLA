@@ -1,5 +1,6 @@
 BEGIN
-    $input
-    in(input)
-    out(input)
+    $nombre
+    out("Decime tu nombre: \n")
+    in(nombre)
+    out("Hola, " + nombre + "\n")
 FINISH

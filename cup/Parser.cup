@@ -76,7 +76,7 @@ code_line       ::= num_expr:e
                     {: RESULT=e ;:}
                 |   LOOP boolean_exp:d JUMP codee:e END
                     {: RESULT="while(" + d + "){\n" + e + "}"; :}
-                |
+                |   {: RESULT="";:}
                 ;
                 
 if_block        ::= IF boolean_exp:b JUMP codee:e ELSE JUMP codee:j END

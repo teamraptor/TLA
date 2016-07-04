@@ -1,0 +1,26 @@
+BEGIN
+    const $enter << ", "
+    #terms << 0
+    out("Ingrese la cantidad de terminos de fibonacci:")
+    out("\n")
+    in(terms)
+    #i << 0
+    #t1 << 0
+    #t2 << 1
+    #next << 0
+    out(t1)
+    out(enter)
+    out(t2)
+    out(enter)
+    
+    terms <- 2
+    
+    loop (i < terms) 
+        next << t1 + t2
+        t1 << t2
+        t2 << next
+        out(next)
+        out(enter)
+        i <+ 1
+    end
+FINISH

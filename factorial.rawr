@@ -1,10 +1,9 @@
 BEGIN
-    #input << 10
-    
+    #input
+    out("Factorial de que numero?\n")
+    in(input)
     #i << input
-    
     i <- 1
-    
     if (i=0)
       out(1)
     else
