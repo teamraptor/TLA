@@ -1,0 +1,137 @@
+BEGIN
+  #flag << 1
+  $p << "Player "
+  $b1 << " "
+  $b2 << " "
+  $b3 << " "
+  $b4 << " "
+  $b5 << " "
+  $b6 << " "
+  $b7 << " "
+  $b8 << " "
+  $b9 << " "
+  $l << "  +---+---+---+\n"
+  out("Welcome\n")
+  out("Player 1: X  vs Player 2: O\n")
+  out(l)
+  out("  | 1 | 2 | 3 |\n")
+  out(l)
+  out("  | 4 | 5 | 6 |\n")
+  out(l)
+  out("  | 7 | 8 | 9 |\n")
+  out(l)
+  #turn << 1
+  #m << 0
+  
+  loop (flag = 1)
+    out(l)
+    $l1 << "  | "+b1+" | "+b2+" | "+b3+" |\n"
+    out(l1)
+    out(l)
+    $l2 << "  | "+b4+" | "+b5+" | "+b6+" |\n"
+    out(l2)
+    out(l)
+    $l3 << "  | "+b7+" | "+b8+" | "+b9+" |\n"
+    out(l3)
+    out(l)  
+    turn <<1-turn
+    out(turn + " :\n")
+    #valid << 1
+    loop (valid = 1)
+      loop (m>10 and m<1)
+        in(m)
+      end
+      if (m=1) and (b1 = " ")
+        if (turn = 1) 
+          b1 << "O"
+        else
+          b1 << "X"
+        end
+        valid << 0
+      else
+        if (m=2) and (b2 = " ")
+          if (turn = 1) 
+            b2 << "O"
+          else
+            b2 << "X"
+          end
+          valid << 0
+        else
+          if (m=3) and (b3 = " ")
+            if (turn = 1) 
+              b3 << "O"
+            else
+              b3 << "X"
+            end
+            valid << 0
+          else
+          if (m=4) and (b4 = " ")
+            if (turn = 1) 
+              b4 << "O"
+            else
+              b4 << "X"
+            end
+            valid << 0
+          else
+            if (m=5) and (b5 = " ")
+              if (turn = 1) 
+                b5 << "O"
+              else
+                b5 << "X"
+              end
+              valid << 0
+            else
+              if (m=6) and (b6 = " ")
+                if (turn = 1) 
+                  b6 << "O"
+                else
+                  b6 << "X"
+                end
+                valid << 0
+              else
+                if (m=7) and (b7 = " ")
+                  if (turn = 1) 
+                    b7 << "O"
+                  else
+                    b7 << "X"
+                  end
+                  valid << 0
+                else
+                  if (m=8) and (b8 = " ")
+                    if (turn = 1) 
+                      b8 << "O"
+                    else
+                      b8 << "X"
+                    end
+                    valid << 0
+                  else
+                    if (m=9) and (b9 = " ")
+                      if (turn = 1) 
+                        b9 << "O"
+                      else
+                        b9 << "X"
+                      end
+                      valid << 0
+                    end
+                  end                 
+                end
+              end
+            end
+          end
+        end
+      end
+    end  
+    #winner << 0
+    if ((b1 = b2) and (b2 = b3)) or ((b4 = b5) and (b5 = b6)) or ((b7 = b8) and (b8 = b9)) or ((b1 = b4) and (b4 = b7)) or ((b2 = b5) and (b5 = b8)) or ((b3 = b6) and (b6 = b9)) or ((b1 = b5) and (b5 = b9)) or ((b3 = b5) and (b5 = b7)) 
+      winner << turn + 1        
+    end 
+    if (winner ~= 0) 
+      flag << 0
+    end  
+  end
+  $aux << "1"
+  if (winner = 2)
+    aux << "2"
+  end
+  out("And the winner is... Player "+aux+" congratulations!!\n") 
+FINISH  
