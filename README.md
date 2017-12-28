@@ -1,21 +1,28 @@
-# TLA
+# Raptor compiler
 
-TPE de Automatas, Teoria de Lenguajes y Compiladores @ ITBA
+Special assignment for Theory of Languajes and Automatas course at [ITBA](https://www.itba.edu.ar)
 
-Para compilar el compilador:
+To compile.. the compiler:
 
 ```
 ant clean jar
 ```
 
-Para compilar un archivo `ejemplo.rawr`:
+To compile a file `ejemplo.rawr`:
 
 ```
 ./compile.sh ejemplo
 ```
 
-Para ejecutar dicho archivo:
+To execute the file:
 
 ```
 java ejemplo
 ```
+
+## Credits
+
+* [Marzoratti, Luis](https://github.com/lmarzora)
+* [Soncini, Lucas](https://github.com/lsoncini)
+* [Fraga, Matias](https://github.com/matifraga)
+* [De Lucca, Tomas](https://github.com/tomidelucca)
